@@ -52,7 +52,7 @@ def get_bank(message):
 def post_json(message):
     bot.send_message(message.from_user.id, "post json:" + message.text)
     bot.send_message(
-        message.from_user.id, "Делаю json запрос на серис (не более 5 мин)..."
+        message.from_user.id, "Делаю json запрос (не более 5 мин)..."
     )
     url = "http://" + domen + ".pythonanywhere.com/api/post_json/"
 
