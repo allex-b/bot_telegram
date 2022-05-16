@@ -20,7 +20,7 @@ def webhook_git():
         origin = repo.remotes.origin
         #repo.git.checkout("HEAD~1")
         #repo.remotes.origin.pull()
-        #repo.git.checkout("master")
+        repo.git.checkout("master")
 
 
         origin.pull()
