@@ -1,4 +1,4 @@
-####################################################WEBHOOK TEST
+####################################################
 # TELEBOT
 ####################################################
 from flask import Flask
@@ -17,6 +17,8 @@ from telebot import types
 #git update from webhooks
 import git 
 
+# TOKENs
+from tokens import TOKEN, domen
 
 app = Flask(__name__)
 
@@ -25,10 +27,7 @@ app = Flask(__name__)
 def index():
     return "Testing TeleBOT"
 
-# TOKENs
-global TOKEN
-TOKEN = ""
-domen = ""
+
 
 global bot
 bot = telebot.TeleBot(TOKEN, threaded=False)
@@ -161,7 +160,7 @@ def GET_json():
 @app.route('/update_server', methods=['POST'])
 def webhook_git():
     if request.method == 'POST':
-        repo = git.Repo('https://github.com/allex-b/bot_telegram')
+        repo = git.Repo('https://github.com/allex-b/bot_telegram.git')
         origin = repo.remotes.origin
 
 
