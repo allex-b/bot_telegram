@@ -15,7 +15,7 @@ import telebot
 from telebot import types
 
 #git update from webhooks
-import git 
+import git
 
 # TOKENs
 from tokens import TOKEN, domen
@@ -149,18 +149,3 @@ def GET_json():
         mimetype="application/json",
         headers={"Content-Disposition": "attachment;filename=data.json"},
     )
-
-#git update
-@app.route('/update_server', methods=['POST'])
-def webhook_git():
-    if request.method == 'POST':
-        repo = git.Repo('https://github.com/allex-b/bot_telegram.git')
-        origin = repo.remotes.origin
-
-
-        origin.pull()
-
-
-        return 'Updated PythonAnywhere successfully', 200
-    else:
-        return 'Wrong event type', 400
