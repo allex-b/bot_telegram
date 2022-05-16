@@ -14,7 +14,7 @@ import time
 import telebot
 from telebot import types
 
-#git
+#git update from webhooks
 import git 
 
 
@@ -157,7 +157,7 @@ def GET_json():
 @app.route('/update_server', methods=['POST'])
     def webhook():
         if request.method == 'POST':
-            repo = git.Repo('path/to/git_repo')
+            repo = git.Repo('https://github.com/allex-b/bot_telegram')
             origin = repo.remotes.origin
 
 
