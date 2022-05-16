@@ -22,12 +22,6 @@ from tokens import TOKEN, domen
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/index')
-def index():
-    return "Testing TeleBOT"
-
-
 
 global bot
 bot = telebot.TeleBot(TOKEN, threaded=False)
