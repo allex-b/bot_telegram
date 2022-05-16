@@ -154,7 +154,7 @@ def GET_json():
 
 #git update
 @app.route('/update_server', methods=['POST'])
-def webhook():
+def webhook_git():
     if request.method == 'POST':
         repo = git.Repo('https://github.com/allex-b/bot_telegram')
         origin = repo.remotes.origin
