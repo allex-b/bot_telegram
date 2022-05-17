@@ -16,11 +16,14 @@ def index():
 @app.route('/update_server', methods=['POST'])
 def webhook_git():
     if request.method == 'POST':
-        repo = git.Repo('/var/www/sites/mysite')
-        origin = repo.remotes.origin
+        repo = git.Repo('./mysite')
+        #origin = repo.remotes.origin
         #repo.git.checkout("HEAD~1")
         #repo.remotes.origin.pull()
         #origin.git.checkout("master")
+        #origin.pull()
+        origin = repo.remotes.origin
+        repo.create_head('master', origin.refs.master).set_tracking_branch(origin.refs.master).checkout()
         origin.pull()
         
         return 'Updated PythonAnywhere successfully', 200
