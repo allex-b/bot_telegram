@@ -17,10 +17,11 @@ def index():
 def webhook_git():
     if request.method == 'POST':
         repo = git.Repo('./mysite')
+        origin = repo.git
+        #origin = repo.remotes.origin
+        origin.checkout('master')
+        origin.pull()
         
-        git = repo.git
-        git.checkout('master')
-        git.pull()
         
         #origin = repo.remotes.origin
         #repo.git.checkout("HEAD~1")
@@ -30,6 +31,8 @@ def webhook_git():
         #origin = repo.remotes.origin
         #repo.create_head('master', origin.refs.master).set_tracking_branch(origin.refs.master).checkout()
         #origin.pull()
+        
+ 
         
         return 'Updated PythonAnywhere successfully', 200
     else:
