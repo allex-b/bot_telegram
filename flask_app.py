@@ -18,7 +18,8 @@ def webhook_git():
     if request.method == 'POST':
         repo = git.Repo('./mysite')
         repo.git.checkout('master')
-        repo.remotes.origin.pull()
+        pull()
+        #repo.remotes.origin.pull()
         
  
         
