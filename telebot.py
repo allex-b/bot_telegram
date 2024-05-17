@@ -1,151 +1,144 @@
 ###########################################
 # TELEBOT
 ###########################################
-from flask import Flask
-from flask import request
+from flask import Flask # запускаем микросервис для работы бота в вебе
+from flask import request # получаем json запросы
+#from flask import jsonify # создаем json запросы
+#from flask import Response # вернуть json из файла
+#import simplejson as json # создаем json запросы
 
-# создаем json запросы
-from flask import json
-from flask import jsonify  # создаем json запросы
-from flask import Response  # вернуть json из файла
-import requests
-
-import time
+#бот
 import telebot
-from telebot import types
+from telebot import types########test_8541_bot
 
-#git update from webhooks
-import git
+import time # делаем паузу
 
-# TOKENs
-from tokens import TOKEN, domen
+#import re # регулярные выражения
 
-app = Flask(__name__)
+#import requests # создаем json запросы
 
+import subprocess
+
+#TOKENs
+from tokens import TOKEN, DOMEN
 
 global bot
 bot = telebot.TeleBot(TOKEN, threaded=False)
 bot.remove_webhook()
 time.sleep(1)
 
-bot.set_webhook(url="https://%s.pythonanywhere.com/%s" % (domen, TOKEN))
+# start the flask app
+app = Flask(__name__)
 
+task_list=["/start", "/vpn", "/Android",  "/iPhone",  "/Windows", "/help", "/contact"]
 
-task_list = ["/weather", "/news", "/bank", "/start", "/help", "/json_data"]
-
-
-def get_weather(message):
-    bot.send_message(
-        message.from_user.id, "https://yandex.ru/search/?text=Погода_%s" % message.text
-    )
-
-
-def get_news(message):
-    bot.send_message(
-        message.from_user.id, "https://yandex.ru/search/?text=Новости_%s" % message.text
-    )
-
-
-def get_bank(message):
-    bot.send_message(message.from_user.id, "https://yandex.ru/search/?text=курс_валют")
-
-
-def post_json(message):
-    bot.send_message(message.from_user.id, "post json:" + message.text)
-    bot.send_message(
-        message.from_user.id, "Делаю json запрос (не более 5 мин)..."
-    )
-    url = "http://" + domen + ".pythonanywhere.com/api/post_json/"
-
-    params = {message.text: "my_json"}
-
-    dump = json.dumps(params)
-
-    headers = {"Content-type": "application/json", "Accept": "text/plain"}
-
-    response = requests.post(url, data=dump, headers=headers)
-
-    bot.send_message(
-        message.from_user.id,
-        "Готово, доступ к API через: http://"
-        + domen
-        + ".pythonanywhere.com/api/get_json/",
-    )
-
-    bot.register_next_step_handler("/start", start_bot)
-
-
-@bot.message_handler(commands=["start"])
+@bot.message_handler(commands=['start'])
 def start_bot(message):
-    bot.send_message(
-        message.chat.id,
-        "Привет *"
-        + message.chat.first_name
-        + "* . Меня зовут Пятница, я здесь в роли ИИ. Чем я могу тебе помочь? /help список моих команд",
-    )
-
-
-@bot.message_handler(commands=["help"])
+        bot.send_message(message.chat.id, "Привет *" + message.chat.first_name +"* . Хочешь, стабильный, бесплатный VPN, который не блокируется? Жми /vpn что бы получить список доступных команд жми /help")
+        
+        
+@bot.message_handler(commands=['help'])
 def help_bot(message):
     bot.send_message(message.chat.id, str(task_list))
+      
+  
 
 
-@bot.message_handler(content_types=["text"])
+@bot.message_handler(content_types=['text'])
 def get_message(message):
 
-    if message.text == "/json_data":
-        bot.send_message(message.from_user.id, "Введите даные для передачи")
-        bot.register_next_step_handler(message, post_json)
-
-    elif message.text == "/weather":
-        bot.send_message(message.from_user.id, "Укажите город...")
-        bot.register_next_step_handler(message, get_weather)
-
-    elif message.text == "/bank":
-        bot.send_message(message.from_user.id, "Хотите узнать валютный курс?")
-        bot.register_next_step_handler(message, get_bank)
-
-    elif message.text == "/news":
-        bot.send_message(
-            message.from_user.id, "/_Политика? /_Эконономика? /_ИТ? Что интереусет?"
-        )
-        bot.register_next_step_handler(message, get_news)
-
+ 
+    if message.text == "/vpn":
+        bot.send_message(message.from_user.id, "1. Укажите email или номер телефона для регистрации на сервере VPN")
+        bot.register_next_step_handler(message, get_vpn) #следующий шаг      
+    
+    elif message.text == "/Android":
+    
+        bot.send_message(message.chat.id, "ссылка для загрузки:")    
+        time.sleep(1)  
+        bot.send_message(message.chat.id, "https://play.google.com/store/apps/details?id=net.openvpn.openvpn")    
+        time.sleep(1)    
+        bot.send_message(message.from_user.id, "Установите файл конфигурации для вашего устройства по инструкции:")
+        time.sleep(1)
+        bot.send_message(message.from_user.id, "https://dzen.ru/a/ZUe4WPbf4kth0wIc?referrer_clid=1400&")
+        
+        
+        
+    
+    elif message.text == "/iPhone":
+    
+        bot.send_message(message.chat.id, "ссылка для загрузки:")    
+        time.sleep(1)  
+        bot.send_message(message.chat.id, "https://apps.apple.com/us/app/openvpn-connect-openvpn-app/id590379981")    
+        time.sleep(1)    
+        bot.send_message(message.from_user.id, "Установите файл конфигурации для вашего устройства по инструкции:")
+        time.sleep(1)
+        bot.send_message(message.from_user.id, "https://dzen.ru/a/ZUfO9erRtjkmKRNm?referrer_clid=1400&")
+    
+    elif message.text == "/Windows":
+    
+        bot.send_message(message.chat.id, "ссылка для загрузки:")    
+        time.sleep(1)  
+        bot.send_message(message.chat.id, "https://apps.apple.com/us/app/openvpn-connect-openvpn-app/id590379981")    
+        time.sleep(1)    
+        bot.send_message(message.from_user.id, "Установите файл конфигурации для вашего устройства по инструкции:")
+        time.sleep(1)
+        bot.send_message(message.from_user.id, "https://dzen.ru/a/ZUfTNcb_FDZHF29C?referrer_clid=1400&")
+        
+    elif message.text == "/contact":
+        bot.send_message(message.from_user.id, "Не работает VPN, возникли вопросы? Задайте их напрямую боту и ждите ответа администрации")
+        bot.register_next_step_handler(message, get_contact)
+        
+        
     else:
-        bot.send_message(
-            message.from_user.id,
-            "Используйте /start для списка команд",
-        )
-    # bot.reply_to(message, message.text) процитирует твой ответ
+        bot.send_message(message.from_user.id, "К сожалению моя нейронная сеть еще недостаточно развита, в ближайшее время я пройду курс по машинному обучению и стану полноценным ИИ. А пока используй /help.")
+    #bot.reply_to(message, message.text) процитирует твой ответ
 
+       
+def get_vpn(message): 
+        
+    bot.send_message(message.from_user.id, "создаю файл конфигурции для %s" % message.text)
+    
+    config_name = str(message.text)
+    
+    subprocess.call(["./add_client.sh", config_name ], cwd = "/root/vpn/")
+    
+    bot.send_message(message.from_user.id, "2. Сохраните файл конфигурции на ваше устройство:")
+    
+    with open(r'/root/vpn/%s.ovpn' % config_name, 'rb') as config_vpn:
+           out_msg  = bot.send_document(message.chat.id, config_vpn)
+           
+    time.sleep(3)
+    
+    bot.send_message(message.chat.id, "Выберите на какое устройство установить VPN /Android  /iPhone /Windows")
+    bot.send_message(message.chat.id, "Пожалуйста выберите один из вариантов установки, если возникли трудности обратитесь в тех поддержку /contact")
+    
+    time.sleep(1)
 
-@app.route("/{}".format(TOKEN), methods=["POST"])
+    
+ 
+  
+    
+def get_contact(message):
+    bot.send_message(message.from_user.id, "Спасибо, ваше обращение << %s >> будет рассмотренно в ближайшее время" % message.chat.id)# message.text)
+
+    bot.forward_message("2023848728", message.chat.id, message.id)
+
+     
+
+    
+@app.route('/{}'.format(TOKEN), methods=["POST"])
 def webhook():
-    bot.process_new_updates(
-        [telebot.types.Update.de_json(request.stream.read().decode("utf-8"))]
-    )
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     print("Message")
-    return "ok", 200
+    return "ok", 200    
+    
+        
+@app.route("/") # Говорим Flask, что за этот адрес отвечает эта функция
+def hello_world():
+ 
+    return "Hello!"
 
+bot.infinity_polling()
 
-@app.route("/api/post_json/", methods=["GET", "POST"])
-def POST_json():
-
-    data = request.get_json()
-    with open("data.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-    return jsonify(request.json)
-
-
-@app.route("/api/get_json/", methods=["GET", "POST"])
-def GET_json():
-
-    with open("data.json", "r") as f:
-        data = json.load(f)
-    generator = (cell for row in data for cell in row)
-    print(generator)
-    return Response(
-        generator,
-        mimetype="application/json",
-        headers={"Content-Disposition": "attachment;filename=data.json"},
-    )
+app.run(host='0.0.0.0', port=80)
